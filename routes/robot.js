@@ -16,7 +16,7 @@ router.get('/question', async (req, res, next) => {
 		const response = await fetch('http://jisuznwd.market.alicloudapi.com/iqa/query?question=' + encodeURIComponent(question), requestConfig);
 		const resJson = await response.json();
 		res.send({
-			status: 1,
+			status: 200,
 			content: resJson.result.content,
 		})
 	} catch (err) {

@@ -7,6 +7,10 @@ import router from './routes/index.js';
 import cookieParser from 'cookie-parser'
 import session from 'express-session';
 import connectMongo from 'connect-mongo';
+import dtime from 'time-formater'
+import IDModel from './models/id.js'
+import ChatModel from './models/chat.js'
+import UserModel from './models/user.js'
 
 app.all('*', (req, res, next) => {
 	res.header("Access-Control-Allow-Origin", req.headers.origin);
@@ -36,12 +40,37 @@ app.use(session({
 }))
 
 const users = {};
-io.on('connection', function (socket) {
- 	socket.on("a",function(msg){
-		io.emit("a",msg);
-	});
-	socket.on('disconnect', function(a){
-		console.log(a)
+io.on('connection', (socket) => {
+ 	socket.on("chat", async (msg) => {
+ 		const {user_id, content} = msg;
+ 		try{
+ 			if(!user_id){
+ 				throw new Error('用户ID参数错误')
+ 			}else if(!content){
+ 				throw new Error('发表对话信息错误')
+ 			}
+ 		}catch(err){
+ 			console.log(err.message, err);
+ 		}
+ 		let chatObj;
+ 		try{
+ 			const user = await UserModel.findOne({id: user_id});
+ 			const ID = await IDModel.findOne()
+			ID.user_id ++ ;
+			await ID.save()
+			chatObj = {
+				id: ID.user_id,
+				username: user.name,
+				avatar: user.avatar,
+				user_id,
+				time: dtime().format('YYYY-MM-DD HH:mm:ss'),
+				content,
+			}
+			await ChatModel.create(chatObj)
+ 		}catch(err){
+ 			console.log('保存聊天数据失败', err);
+ 		}
+		io.emit("chat",chatObj);
 	});
 });
     

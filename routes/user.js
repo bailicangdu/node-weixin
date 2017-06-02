@@ -4,14 +4,8 @@ import IDModel from '../models/id.js'
 const router = express.Router();
 
 router.get('/login', async (req, res, next) => {
-	const username = req.query.username;
-	// const userData = await UserModel.findOne({name: username});
-	// if (userData) {
-	// 	res.send({
-	// 		status: 0,
-	// 		message: '改用户名已被注册'
-	// 	})
-	// }else{
+	try{
+		const username = req.query.username;
 		const ID = await IDModel.findOne()
 		ID.user_id ++ ;
 		await ID.save()
@@ -28,18 +22,43 @@ router.get('/login', async (req, res, next) => {
 				id: ID.user_id,
 			}
 		})
-	//}
+	}catch(err){
+		console.log('注册失败', err);
+		res.send({
+			status: 0,
+			message: '注册失败',
+		})
+	}
 })
 
 router.get('/info', async (req, res, next) => {
-	const user_id = req.session.user_id;
-	const userData = await UserModel.findOne({id: user_id}, 'name id -_id');
-	if (userData) {
+	const session_user_id = req.session.user_id;
+	const query_user_id = req.session.user_id;
+	const user_id = session_user_id || query_user_id;
+	if (!user_id) {
+		console.log('user_id参数错误')
 		res.send({
-			status: 200,
-			user_info:  userData
+			status: 0,
+			message: 'user_id参数错误'
 		})
-	}else{
+		return 
+	}
+	try{
+		const userData = await UserModel.findOne({id: user_id}, '-_id');
+		if (userData) {
+			res.send({
+				status: 200,
+				user_info:  userData
+			})
+		}else{
+			console.log('未找到当前用户')
+			res.send({
+				status: 0,
+				message: '未找到当前用户'
+			})
+		}
+	}catch(err){
+		console.log('获取用户信息失败', err)
 		res.send({
 			status: 0,
 			message: '获取用户信息失败'

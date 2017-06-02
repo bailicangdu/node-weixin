@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
 	name: String,
 	id: Number,
+	avatar: {type: String, default: 'default.jpg'},
 })
 
 userSchema.index({id: 1})
