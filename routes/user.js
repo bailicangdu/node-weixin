@@ -9,9 +9,11 @@ router.get('/login', async (req, res, next) => {
 		const ID = await IDModel.findOne()
 		ID.user_id ++ ;
 		await ID.save()
+		const avatar = Math.round(Math.random()*20) + '.jpg'
 		await UserModel.create({
 			name: username,
 			id: ID.user_id,
+			avatar,
 		})
 		req.session.user_id = ID.user_id;
 		res.send({
@@ -20,7 +22,7 @@ router.get('/login', async (req, res, next) => {
 			user_info: {
 				name: username,
 				id: ID.user_id,
-				avatar: Math.round(Math.random()*20) + '.jpg',
+				avatar,
 			}
 		})
 	}catch(err){
