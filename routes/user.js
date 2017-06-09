@@ -20,6 +20,7 @@ router.get('/login', async (req, res, next) => {
 			user_info: {
 				name: username,
 				id: ID.user_id,
+				avatar: Math.round(Math.random()*20) + '.jpg',
 			}
 		})
 	}catch(err){

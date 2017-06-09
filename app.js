@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
  			}
  		}catch(err){
  			console.log(err.message, err);
+ 			return 
  		}
  		let chatObj;
  		try{
