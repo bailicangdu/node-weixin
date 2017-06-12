@@ -9,7 +9,7 @@ router.get('/login', async (req, res, next) => {
 		const ID = await IDModel.findOne()
 		ID.user_id ++ ;
 		await ID.save()
-		const avatar = Math.round(Math.random()*20) + '.jpg'
+		const avatar = Math.ceil(Math.random()*20) + '.jpg'
 		await UserModel.create({
 			name: username,
 			id: ID.user_id,
@@ -36,13 +36,13 @@ router.get('/login', async (req, res, next) => {
 
 router.get('/info', async (req, res, next) => {
 	const session_user_id = req.session.user_id;
-	const query_user_id = req.session.user_id;
+	const query_user_id = req.query.user_id;
 	const user_id = session_user_id || query_user_id;
 	if (!user_id) {
-		console.log('user_id参数错误')
+		console.log('用户未登陆')
 		res.send({
 			status: 0,
-			message: 'user_id参数错误'
+			message: '用户未登陆'
 		})
 		return 
 	}

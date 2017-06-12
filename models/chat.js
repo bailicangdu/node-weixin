@@ -13,7 +13,7 @@ const chatSchema = new Schema({
 	content: String,
 })
 
-chatSchema.index({id: -1});
+chatSchema.index({id: 1});
 
 const Chat = mongoose.model('Chat', chatSchema)
 

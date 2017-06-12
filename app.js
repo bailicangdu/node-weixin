@@ -40,7 +40,7 @@ app.use(session({
 }))
 
 const users = {};
-io.on('connection', (socket) => {
+io.on('connection', socket => {
  	socket.on("chat", async (msg) => {
  		const {user_id, content} = msg;
  		try{
@@ -51,16 +51,15 @@ io.on('connection', (socket) => {
  			}
  		}catch(err){
  			console.log(err.message, err);
- 			return 
  		}
  		let chatObj;
  		try{
  			const user = await UserModel.findOne({id: user_id});
  			const ID = await IDModel.findOne()
-			ID.user_id ++ ;
+			ID.chat_id ++ ;
 			await ID.save()
 			chatObj = {
-				id: ID.user_id,
+				id: ID.chat_id,
 				username: user.name,
 				avatar: user.avatar,
 				user_id,
