@@ -1,4 +1,5 @@
-const app = require('express')();
+import express from 'express'
+const app = express()
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 import db from './mongodb/db.js';
@@ -11,6 +12,7 @@ import dtime from 'time-formater'
 import IDModel from './models/id.js'
 import ChatModel from './models/chat.js'
 import UserModel from './models/user.js'
+import history from 'connect-history-api-fallback';
 
 app.all('*', (req, res, next) => {
 	res.header("Access-Control-Allow-Origin", req.headers.origin);
@@ -75,4 +77,6 @@ io.on('connection', socket => {
 });
     
 router(app)
+app.use(history());
+app.use(express.static('./public'));
 server.listen(config.port);
