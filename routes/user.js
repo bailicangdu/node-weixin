@@ -69,4 +69,21 @@ router.get('/info', async (req, res, next) => {
 	}
 })
 
+
+router.get('/all', async (req, res, next) => {
+	try{
+		const users = await UserModel.find({}, '-_id -__v');
+		res.send({
+			status: 200,
+			users,
+		})
+	}catch(err){
+		console.log('获取用户列表失败', err);
+		res.send({
+			type: 'ERROR_TO_GET_USER_LIST',
+			message: '获取用户列表失败'
+		})
+	}
+})
+
 export default router
