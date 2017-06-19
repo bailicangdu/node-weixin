@@ -44,16 +44,18 @@ app.use(session({
 const users = {};
 io.on('connection', socket => {
  	socket.on("chat", async (msg) => {
- 		const {user_id, content} = msg;
+ 		let {user_id, content} = msg;
+ 		content = content.trim();
  		try{
  			if(!user_id){
  				throw new Error('用户ID参数错误')
- 			}else if(!content){
+ 			}else if(!content || ){
  				throw new Error('发表对话信息错误')
  			}
  		}catch(err){
  			console.log(err.message, err);
  		}
+		content = content.substring(0,100);
  		let chatObj;
  		try{
  			const user = await UserModel.findOne({id: user_id});
