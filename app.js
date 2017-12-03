@@ -49,7 +49,7 @@ io.on('connection', socket => {
  		try{
  			if(!user_id){
  				throw new Error('用户ID参数错误')
- 			}else if(!content || ){
+ 			}else if(!content){
  				throw new Error('发表对话信息错误')
  			}
  		}catch(err){
